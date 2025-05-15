@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="202505152010" author="zp95sky">
+        <!-- 部门表 -->
+        <createTable tableName="department" remarks="部门信息表">
+            <column name="id" type="bigint" autoIncrement="true" remarks="部门ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)" remarks="部门名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="bigint" remarks="父部门ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="description" type="varchar(200)" remarks="部门描述"/>
+            <column name="created_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="tinyint" defaultValue="0" remarks="删除标记(0:未删除,1:已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="department" indexName="idx_department_parent_id">
+            <column name="parent_id"/>
+        </createIndex>
+
+        <!-- 部门管理员表 -->
+        <createTable tableName="department_admin" remarks="部门管理员关联表">
+            <column name="id" type="bigint" autoIncrement="true" remarks="主键ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="department_id" type="bigint" remarks="部门ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint" remarks="用户ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="tinyint" defaultValue="0" remarks="删除标记(0:未删除,1:已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="department_admin" indexName="idx_department_admin_dept_id">
+            <column name="department_id"/>
+        </createIndex>
+        <createIndex tableName="department_admin" indexName="idx_department_admin_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        
+        <!-- 用户表 -->
+        <createTable tableName="user" remarks="用户信息表">
+            <column name="id" type="bigint" autoIncrement="true" remarks="用户ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)" remarks="用户名">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(100)" remarks="密码">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)" remarks="姓名">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)" remarks="邮箱">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="varchar(20)" remarks="手机号"/>
+            <column name="avatar" type="varchar(200)" remarks="头像URL"/>
+            <column name="role" type="varchar(20)" remarks="角色">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="tinyint" defaultValue="1" remarks="状态(1:启用,0:禁用)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_login_time" type="datetime" remarks="最后登录时间"/>
+            <column name="created_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="tinyint" defaultValue="0" remarks="删除标记(0:未删除,1:已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="user" indexName="idx_user_username">
+            <column name="username"/>
+        </createIndex>
+        <createIndex tableName="user" indexName="idx_user_email">
+            <column name="email"/>
+        </createIndex>
+        
+        <!-- 项目组表 -->
+        <createTable tableName="project_group" remarks="项目组信息表">
+            <column name="id" type="bigint" autoIncrement="true" remarks="项目组ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)" remarks="姓名">
+                <constraints nullable="false"/>
+            </column>
+            <column name="department_id" type="bigint" remarks="所属部门ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(200)" remarks="项目组描述"/>
+            <column name="created_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="tinyint" defaultValue="0" remarks="删除标记(0:未删除,1:已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="project_group" indexName="idx_project_group_dept_id">
+            <column name="department_id"/>
+        </createIndex>
+        
+        <!-- 项目表 -->
+        <createTable tableName="project" remarks="项目信息表">
+            <column name="id" type="bigint" autoIncrement="true" remarks="项目ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)" remarks="项目名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="bigint" remarks="所属项目组ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text" remarks="项目描述"/>
+            <column name="status" type="varchar(20)" remarks="项目状态">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="date" remarks="项目开始日期"/>
+            <column name="end_date" type="date" remarks="项目结束日期"/>
+            <column name="created_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="tinyint" defaultValue="0" remarks="删除标记(0:未删除,1:已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="project" indexName="idx_project_group_id">
+            <column name="group_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
